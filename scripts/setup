@@ -117,7 +117,7 @@ then
     done
 fi
 
-ANNOUNCED_IPv4=EXTERNAL_IPv4
+ANNOUNCED_IPv4=$EXTERNAL_IPv4
 
 LISTEN_IPv4=""
 if [ "$is_nat" == "y" ]
@@ -141,7 +141,7 @@ then
         done
     fi
 fi
-ANNOUNCED_IPv6=EXTERNAL_IPv6
+ANNOUNCED_IPv6=$EXTERNAL_IPv6
 
 
 # write settings
