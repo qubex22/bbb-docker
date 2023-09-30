@@ -98,11 +98,16 @@ then
   fi
 
 fi
+is_nat=""
+while [[ ! $is_nat =~ ^(y|n)$ ]]; do
+    read -p "Is you bbb behind NAT? (y/n): " is_nat
+done
 
 ip_correct=""
 while [[ ! $ip_correct =~ ^(y|n)$ ]]; do
-    read -p "Is $EXTERNAL_IPv4 your external IPv4 address? (y/n): " ip_correct
+    read -p "Is $EXTERNAL_IPv4 your public IPv4 address? (y/n): " ip_correct
 done
+
 
 if [ ! "$ip_correct" == "y" ]
 then
@@ -110,6 +115,15 @@ then
     while [[ ! $EXTERNAL_IPv4 =~ ^[1-9][0-9]{0,2}\.[0-9]{0,3}\.[0-9]{0,3}\.[1-9][0-9]{0,2}$ ]]; do
         read -p "Please enter correct IPv4 address: " EXTERNAL_IPv4
     done
+fi
+
+ANNOUNCED_IPv4=EXTERNAL_IPv4
+
+LISTEN_IPv4=""
+if ["is_nat" == "y"]
+then
+    read -p "Please enter listening local IPv4 address: " LISTEN_IPv4
+    EXTERNAL_IPv4=LISTEN_IPv4
 fi
 
 if [ -n "$EXTERNAL_IPv6" ]
@@ -127,13 +141,15 @@ then
         done
     fi
 fi
-
+ANNOUNCED_IPv6=EXTERNAL_IPv6
 
 
 # write settings
 cp sample.env .env
 sed -i "s/EXTERNAL_IPv4=.*/EXTERNAL_IPv4=$EXTERNAL_IPv4/" .env
+sed -i "s/ANNOUNCED_IPv4=.*/ANNOUNCED_IPv4=$ANNOUNCED_IPv4/" .env
 sed -i "s/EXTERNAL_IPv6=.*/EXTERNAL_IPv6=$EXTERNAL_IPv6/" .env
+sed -i "s/ANNOUNCED_IPv6=.*/ANNOUNCED_IPv6=$ANNOUNCED_IPv6/" .env
 sed -i "s/DOMAIN=.*/DOMAIN=$DOMAIN/" .env
 
 if [ ! "$greenlight" == "y" ]
