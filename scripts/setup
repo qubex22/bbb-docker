@@ -146,6 +146,7 @@ ANNOUNCED_IPv6=EXTERNAL_IPv6
 
 # write settings
 cp sample.env .env
+sed -i "s/LISTEN_IPv4=.*/LISTEN_IPv4=$LISTEN_IPv4/" .env
 sed -i "s/EXTERNAL_IPv4=.*/EXTERNAL_IPv4=$EXTERNAL_IPv4/" .env
 sed -i "s/ANNOUNCED_IPv4=.*/ANNOUNCED_IPv4=$ANNOUNCED_IPv4/" .env
 sed -i "s/EXTERNAL_IPv6=.*/EXTERNAL_IPv6=$EXTERNAL_IPv6/" .env
