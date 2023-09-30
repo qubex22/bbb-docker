@@ -111,7 +111,8 @@ services:
         TAG_FS_BUILD_FILES: {{ .Env.TAG_FS_BUILD_FILES }}
         TAG_FS_CONFIG: {{ .Env.TAG_FS_CONFIG }}
         TAG_FREESWITCH: {{ .Env.TAG_FREESWITCH }}
-    image: alangecker/bbb-docker-freeswitch:{{ .Env.TAG_FS_CONFIG }}
+    #build it locally to apply vars.xml changes
+    #image: alangecker/bbb-docker-freeswitch:{{ .Env.TAG_FS_CONFIG }}
     restart: unless-stopped
     cap_add:
       - IPC_LOCK
@@ -249,11 +250,11 @@ services:
       # TODO: add mediasoup IPv6
       # TODO: can listen to 0.0.0.0 for nat support? https://github.com/versatica/mediasoup/issues/487
     {{ if .Env.EXTERNAL_IPv6 }}
-      MS_WEBRTC_LISTEN_IPS: '[{"ip":"{{ .Env.EXTERNAL_IPv6 }}", "announcedIp":"{{ .Env.EXTERNAL_IPv6 }}"}, {"ip":"${EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
+      MS_WEBRTC_LISTEN_IPS: '[{"ip":"{{ .Env.EXTERNAL_IPv6 }}", "announcedIp":"{{ .Env.ANNOUNCED_IPv6 }}"}, {"ip":"${EXTERNAL_IPv4}", "announcedIp":"${ANNOUNCED_IPv4}"}]'
     {{else}}
-      MS_WEBRTC_LISTEN_IPS: '[{"ip":"${EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
+      MS_WEBRTC_LISTEN_IPS: '[{"ip":"${EXTERNAL_IPv4}", "announcedIp":"${ANNOUNCED_IPv4}"}]'
     {{end}}
-      MS_RTP_LISTEN_IP: '{"ip":"0.0.0.0", "announcedIp":"${EXTERNAL_IPv4}"}'
+      MS_RTP_LISTEN_IP: '{"ip":"0.0.0.0", "announcedIp":"${ANNOUNCED_IPv4}"}'
     volumes:
       - vol-mediasoup:/var/mediasoup
     tmpfs:
